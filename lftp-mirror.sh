@@ -34,6 +34,7 @@ do
     then
         # Move finished downloads to destination directory
         echo "moving finished lftp files to mapped finished downloads path"
+	chmod -R 777 /config/download/*
         mv -f /config/download/* /download
     else
         echo "No files downloaded"
