@@ -15,7 +15,7 @@ LFTP_FILES=${LFTP_FILES}\\n"
 mkdir -p /config/ssh
 
 # create a directory for active downloads
-pkdir -p /config/.download
+mkdir -p /config/.download
 
 # create finished downloads directory
 mkdir -p /config/download
