@@ -11,31 +11,33 @@ REMOTE_DIR=${REMOTE_DIR}\\n\
 LFTP_PARTS=${LFTP_PARTS}\\n\
 LFTP_FILES=${LFTP_FILES}\\n"
 
-# create a /config downloads directory
-mkdir -p /config/download
-
-# create a /config directory for ssh and link ssh area
+# create a directory for placing private key for lftp to use
 mkdir -p /config/ssh
+
+# create a directory for active downloads
+pkdir -p /config/.download
+
+# create finished downloads directory
+mkdir -p /config/download
 
 while true
 do
-	# LFTP with settings to /tmp/download directory
+	# LFTP with specified segment & parallel
 	echo "beginning lftp synchronization from $REMOTE_DIR"
 	
 	lftp -u $USERNAME, sftp://$HOST -p $PORT <<-EOF
         set ssl:verify-certificate no
         set sftp:auto-confirm yes
         set sftp:connect-program "ssh -a -x -i /config/ssh/id_rsa"
-	    mirror -c --no-empty-dirs --Remove-source-files --Remove-source-dirs --use-pget-n=$LFTP_PARTS -P$LFTP_FILES $REMOTE_DIR /config/download
+	    mirror -c --no-empty-dirs --Remove-source-files --Remove-source-dirs --use-pget-n=$LFTP_PARTS -P$LFTP_FILES $REMOTE_DIR /config/.download
 	quit
 	EOF
 
-    if [ $(ls -A /config/download) ]
+    if [ $(ls -A /config/.download) ]
     then
         # Move finished downloads to destination directory
-        echo "moving finished lftp files to mapped finished downloads path"
-	chmod -R 777 /config/download/*
-        mv -f /config/download/* /download
+	chmod -R 777 /config/.download/*
+        mv -fv /config/.download/* /config/download
     else
         echo "No files downloaded"
     fi
