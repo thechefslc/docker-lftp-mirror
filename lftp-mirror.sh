@@ -37,7 +37,7 @@ do
 	quit
 	EOF
 
-    if [ $(ls -A /config/.download) ]
+    if [ "$(ls -A /config/.download)" ]
     then
     	# Move finished downloads to destination directory
     	echo "[$(date '+%H:%M:%S')] Moving files....."
