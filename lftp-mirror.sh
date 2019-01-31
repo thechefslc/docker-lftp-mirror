@@ -23,7 +23,7 @@ mkdir -p /config/download
 while true
 do
 	# LFTP with specified segment & parallel
-	echo "beginning lftp synchronization from $REMOTE_DIR"
+	echo "[$(date '+%H:%M:%S')] Checking ${REMOTE_DIR} for files....."
 	
 	lftp -u $USERNAME, sftp://$HOST -p $PORT <<-EOF
         set ssl:verify-certificate no
@@ -35,14 +35,16 @@ do
 
     if [ $(ls -A /config/.download) ]
     then
-        # Move finished downloads to destination directory
+    	# Move finished downloads to destination directory
+    	echo "[$(date '+%H:%M:%S')] Moving files....."
+
 	chmod -R 777 /config/.download/*
         mv -fv /config/.download/* /config/download
     else
-        echo "No files downloaded"
+        echo "[$(date '+%H:%M:%S')] Nothing to download"
     fi
 
     # Repeat process after one minute
-    echo "Sleeping for 1 minute"
+    echo "[$(date '+%H:%M:%S')] Sleeping for 1 minute"
     sleep 1m
 done
