@@ -8,8 +8,12 @@ HOST=${HOST}\\n\
 PORT=${PORT}\\n\
 USERNAME=${USERNAME}\\n\
 REMOTE_DIR=${REMOTE_DIR}\\n\
+FINISHED_DIR=${FINISHED_DIR}\\n\
 LFTP_PARTS=${LFTP_PARTS}\\n\
 LFTP_FILES=${LFTP_FILES}\\n"
+
+# if no finished files directory specified, default to /config/download
+[ -z "$FINISHED_DIR" ] && FINISHED_DIR="/config/download"
 
 # create a directory for placing private key for lftp to use
 mkdir -p /config/ssh
@@ -39,7 +43,7 @@ do
     	echo "[$(date '+%H:%M:%S')] Moving files....."
 
 	chmod -R 777 /config/.download/*
-        mv -fv /config/.download/* /config/download
+        mv -fv /config/.download/* $FINISHED_DIR
     else
         echo "[$(date '+%H:%M:%S')] Nothing to download"
     fi
