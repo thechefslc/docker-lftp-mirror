@@ -10,16 +10,16 @@ USERNAME=${USERNAME}\\n\
 REMOTE_DIR=${REMOTE_DIR}\\n\
 FINISHED_DIR=${FINISHED_DIR}\\n\
 LFTP_PARTS=${LFTP_PARTS}\\n\
-LFTP_FILES=${LFTP_FILES}\\n"
+LFTP_FILES=${LFTP_FILES}\\n
+LFTP_OPTS=${LFTP_OPTS:}\\n"
+
+#--no-empty-dirs --Remove-source-files --Remove-source-dirs
 
 # if no finished files directory specified, default to /config/download
 [ -z "$FINISHED_DIR" ] && FINISHED_DIR="/config/download"
 
 # create a directory for placing private key for lftp to use
 mkdir -p /config/ssh
-
-# create a directory for active downloads
-mkdir -p /config/.download
 
 # create finished downloads directory
 mkdir -p /config/download
@@ -33,22 +33,22 @@ do
         set ssl:verify-certificate no
         set sftp:auto-confirm yes
         set sftp:connect-program "ssh -a -x -i /config/ssh/id_rsa"
-	    mirror -c --no-empty-dirs --Remove-source-files --Remove-source-dirs --use-pget-n=$LFTP_PARTS -P$LFTP_FILES $REMOTE_DIR /config/.download
+	    mirror -c $LFTP_OPTS --use-pget-n=$LFTP_PARTS -P$LFTP_FILES $REMOTE_DIR $FINISHED_DIR
 	quit
 	EOF
 
-    if [ "$(ls -A /config/.download)" ]
-    then
-    	# Move finished downloads to destination directory
-    	echo "[$(date '+%H:%M:%S')] Moving files....."
-
-	chmod -R 777 /config/.download/*
-        mv -fv /config/.download/* $FINISHED_DIR
-    else
-        echo "[$(date '+%H:%M:%S')] Nothing to download"
-    fi
-
-    # Repeat process after one minute
-    echo "[$(date '+%H:%M:%S')] Sleeping for 1 minute"
-    sleep 1m
-done
+#    if [ "$(ls -A /config/.download)" ]
+#    then
+#    	# Move finished downloads to destination directory
+#    	echo "[$(date '+%H:%M:%S')] Moving files....."
+#
+#	chmod -R 777 /config/.download/*
+#        mv -fv /config/.download/* $FINISHED_DIR
+#    else
+#        echo "[$(date '+%H:%M:%S')] Nothing to download"
+#    fi
+#
+#    # Repeat process after one minute
+#    echo "[$(date '+%H:%M:%S')] Sleeping for 1 minute"
+#    sleep 1m
+#done
