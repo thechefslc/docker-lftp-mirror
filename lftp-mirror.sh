@@ -10,8 +10,11 @@ USERNAME=${USERNAME}\\n\
 REMOTE_DIR=${REMOTE_DIR}\\n\
 FINISHED_DIR=${FINISHED_DIR}\\n\
 LFTP_PARTS=${LFTP_PARTS}\\n\
-LFTP_FILES=${LFTP_FILES}\\n
-LFTP_OPTS=${LFTP_OPTS:}\\n"
+LFTP_FILES=${LFTP_FILES}\\n\
+LFTP_OPTS=${LFTP_OPTS}\\n\
+\\n\
+Using DEFAULT script...\\n"
+
 
 #--no-empty-dirs --Remove-source-files --Remove-source-dirs
 
@@ -41,14 +44,12 @@ do
 #    then
 #    	# Move finished downloads to destination directory
 #    	echo "[$(date '+%H:%M:%S')] Moving files....."
-#
-#	chmod -R 777 /config/.download/*
-#        mv -fv /config/.download/* $FINISHED_DIR
+#   	chmod -R 777 /config/.download/*
+#       mv -fv /config/.download/* $FINISHED_DIR
 #    else
 #        echo "[$(date '+%H:%M:%S')] Nothing to download"
 #    fi
-#
-#    # Repeat process after one minute
-#    echo "[$(date '+%H:%M:%S')] Sleeping for 1 minute"
-#    sleep 1m
-#done
+    # Repeat process after one minute
+    echo "[$(date '+%H:%M:%S')] Sleeping for 1 minute"
+    sleep 1m
+done
